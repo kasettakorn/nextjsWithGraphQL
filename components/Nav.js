@@ -26,7 +26,7 @@ const aStyle = {
     fontFamily: "Cambria, Cochin, Georgia, Times, 'Times New Roman', serif",
 }
 const Nav = () => {
-  const { user } = useContext(AuthContext)
+  const { user, signout } = useContext(AuthContext)
   console.log(user);
   
   return(
@@ -49,7 +49,14 @@ const Nav = () => {
               <a style={aStyle}>Cart</a>
             </Link>
           </li>
-          <button>Sign Out</button>
+          <button style={{
+            background: 'gray',
+            fontSize: '18px',
+            padding: '10px',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer'
+          }} onClick={signout}>Sign Out</button>
         </>}
         {!user && 
         <>

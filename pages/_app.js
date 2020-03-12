@@ -57,18 +57,25 @@ function MyApp({ Component, pageProps, apollo, user }) {
 // perform automatic static optimization, causing every page in your app to
 // be server-side rendered.
 //
-MyApp.getInitialProps = async ({ ctx }) => {
+MyApp.getInitialProps = async ({ ctx, router }) => {
     //client side
    if (process.browser) {
        return __NEXT_DATA__.props.pageProps
    }
-
+   
    const { headers } = ctx.req
 
    const cookies = headers && cookie.parse(headers.cookie || '')
    
    const token = cookies && cookies.jwt
    
+   if (!token) {
+       if (router.pathname === '/cart') {
+           ctx.res.writeHead(302, { Location: '/signin' })
+           ctx.res.end()
+       }
+       return null
+   }
    
    const response = await fetch("http://localhost:4444/graphql", {
        method: 'post',
@@ -85,6 +92,10 @@ MyApp.getInitialProps = async ({ ctx }) => {
        
    }
    else {
+        if (router.pathname === '/cart') {
+            ctx.res.writeHead(302, { Location: '/signin' })
+            ctx.res.end()
+        }
         return null;
    }
    // calls page's `getInitialProps` and fills `appProps.pageProps`
